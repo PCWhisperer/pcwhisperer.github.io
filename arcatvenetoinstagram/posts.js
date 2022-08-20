@@ -44,16 +44,6 @@ var posts = [{
 {
   "account_name": "ARCAT Veneto",
   "is_image": true,
-  "post_content_url": "./img/formazione_gav.jpeg",
-  "account_likes_it": "ACAT_Belluno",
-  "post_text": `#formazione #confronto #crescita
-                Il Gruppo GAV (Giovani ARCAT Veneto) riunito con il formatore #AlessandroBalzan a Padova per il secondo incontro sulle "Comunità accoglienti e solidali"`,
-  "show_comments_text": "Mostra tutti e 10 i commenti",
-  "post_date": "1 mese fa",
-},
-{
-  "account_name": "ARCAT Veneto",
-  "is_image": true,
   "post_content_url": ["./img/backstage_video_gav.jpeg", "./img/backstage_video_gav2.jpeg"],
   "account_likes_it": "ACAT_Belluno",
   "post_text": `#backstage del prossimo video #sobrietàébellezza`,
