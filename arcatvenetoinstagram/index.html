@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<!--
+   TODO:
+   - carousel   
+   - testo per geolocalizzazione   
+-->
+
+<head>
+  <meta title="Instagram - ARCAT Veneto">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <script src="./posts.js"></script>
+  <script src="./script/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 14px;
+      --story-gradient: linear-gradient(225deg, rgba(211, 0, 197, 1) 0%, rgba(255, 44, 67, 1) 50%, rgba(255, 198, 0, 1) 100%);
+      background: linear-gradient(225deg, rgb(0, 90, 23) 0%, rgb(0, 190, 48) 100%);
+    }
+
+
+    .post-container {
+      display: flex;
+      flex-direction: column;
+      row-gap: 10px;
+      border: 1px solid #DBDBDB;
+      border-radius: 10px;
+      background-color: white;
+      width: 100%;
+      max-width: 470px;
+      margin-top: 6px;
+      margin-bottom: 6px;
+    }
+
+    .profile-img-story {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(225deg, rgba(211, 0, 197, 1) 0%, rgba(255, 44, 67, 1) 50%, rgba(255, 198, 0, 1) 100%);
+      border-radius: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-img {
+      width: 32px;
+      height: 32px;
+      border: 2px solid white;
+      border-radius: 25px;
+      background-image: url("./Logo40.png");
+      background-size: 32px 32px;
+      background-color: white;
+    }
+
+    .account-name {
+      color: #404040;
+      font-weight: bold;
+    }
+
+    .post-row {
+      margin-left: 12px;
+      margin-right: 12px;
+    }
+
+    .grey-text {
+      color: #A3A3A3;
+    }
+
+    hashtag {
+      color: #385898;
+    }
+
+    .carousel {
+      position: relative;
+    }
+
+    .prev-button {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      cursor: pointer;
+    }
+
+    .next-button {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body onload="onLoad()">
+  <div style="display: flex; flex-direction: column; align-items: center;">
+    <!-- Contenitore post -->
+    <div id="post-template" class="post-container">
+      <!-- nome account -->
+      <div style="display: flex; flex-direction: row; column-gap: 8px; align-items: center; margin: 8px 8px 0px 8px;">
+        <div class="profile-img-story">
+          <div class="profile-img">
+          </div>
+        </div>
+        <div class="account-name ph-account-name"></div>
+        <div style="flex-grow: 1;">
+        </div>
+        <div style="font-size: 30px;">
+          ...
+        </div>
+      </div>
+      <div class="carousel">
+        <!-- immagine -->
+        <div class="image-element" style="display: none;">
+          <img style="width: 100%; max-width: 470px;" />
+        </div>
+        <!-- video -->
+        <div class="video-element" style="display: none;">
+          <video style="width: 100%; max-width: 470px;" controls>
+            <source type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <img class="prev-button" src="./img/prev.png" />
+        <img class="next-button" src="./img/next.png" />
+      </div>
+      <!-- pulsanti interazione -->
+      <div class="post-row" style="display: flex; flex-direction: row; align-items: center; column-gap: 18px;">
+        <div class="button-glyph">
+          <svg color="black" height="24" viewBox="0 0 24 24" width="24">
+            <path
+              d="M16.792 3.904A4.989 4.989 0 0121.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 014.708-5.218 4.21 4.21 0 013.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 013.679-1.938m0-2a6.04 6.04 0 00-4.797 2.127 6.052 6.052 0 00-4.787-2.127A6.985 6.985 0 00.5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 003.518 3.018 2 2 0 002.174 0 45.263 45.263 0 003.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 00-6.708-7.218z">
+            </path>
+          </svg>
+        </div>
+        <div class="button-glyph">
+          <svg color="black" height="24" viewBox="0 0 24 24" width="24">
+            <path d="M20.656 17.008a9.993 9.993 0 10-3.59 3.615L22 22z" fill="none" stroke="currentColor"
+              stroke-linejoin="round" stroke-width="2"></path>
+          </svg>
+        </div>
+        <div class="button-glyph">
+          <svg color="black" height="24" role="img" viewBox="0 0 24 24" width="24">
+            <line fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2" x1="22" x2="9.218" y1="3"
+              y2="10.083"></line>
+            <polygon fill="none" points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334"
+              stroke="currentColor" stroke-linejoin="round" stroke-width="2"></polygon>
+          </svg>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <div class="button-glyph">
+          <svg color="black" height="24" role="img" viewBox="0 0 24 24" width="24">
+            <polygon fill="none" points="20 21 12 13.44 4 21 4 3 20 3 20 21" stroke="currentColor"
+              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon>
+          </svg>
+        </div>
+      </div>
+      <!-- piace a ... -->
+      <div class="post-row">
+        Piace a <b> <span class="ph-account-likes-it"></span></b> e <b>altri</b>
+      </div>
+      <!-- contenuto post -->
+      <div class="post-row">
+        <b class="ph-account-name"></b> <span class="ph-post-text" style="white-space: pre-line;"></span>
+        <b>altro</b>
+      </div>
+      <!-- Mostra commenti... -->
+      <div class="post-row grey-text ph-show-comments-text"></div>
+      <!-- data pubblicazione -->
+      <div class="post-row grey-text ph-post-date" style="font-size: 10px;"></div>
+      <div style="border-top: 1px solid #EFEFEF;"></div>
+      <!-- area commento -->
+      <div class="post-row"
+        style="display: flex; flex-direction: row; align-items: center; column-gap: 18px; margin-bottom: 8px;">
+        <div class="button-glyph">
+          <svg color="black" height="24" viewBox="0 0 24 24" width="24">
+            <path
+              d="M15.83 10.997a1.167 1.167 0 101.167 1.167 1.167 1.167 0 00-1.167-1.167zm-6.5 1.167a1.167 1.167 0 10-1.166 1.167 1.167 1.167 0 001.166-1.167zm5.163 3.24a3.406 3.406 0 01-4.982.007 1 1 0 10-1.557 1.256 5.397 5.397 0 008.09 0 1 1 0 00-1.55-1.263zM12 .503a11.5 11.5 0 1011.5 11.5A11.513 11.513 0 0012 .503zm0 21a9.5 9.5 0 119.5-9.5 9.51 9.51 0 01-9.5 9.5z">
+            </path>
+          </svg>
+        </div>
+        <div class="grey-text">
+          Aggiungi un commento...
+        </div>
+        <div style="flex-grow: 1; "></div>
+        <div style="color: #BCE3FD; font-weight: bold;">
+          Pubblica
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const carouselIndexes = [];
+
+    function onLoad() {
+      $(document).ready(function () {
+        let templateEl = $("#post-template").get(0);
+        for (let postIndex = 0; postIndex < posts.length; postIndex++) {
+          const post = posts[postIndex];
+          carouselIndexes.push(0);
+
+          let newPost = $(templateEl).clone();
+          const carouselEl = newPost.find(".carousel").get(0);
+
+          if (post.is_image) {
+            newPost.find(".image-element").get(0).style.display = "block";
+          } else {
+            newPost.find(".video-element").get(0).style.display = "block";
+          }
+
+          if (typeof post.post_content_url !== "string") {
+            const urls = post.post_content_url;
+            const imageEl = newPost.find(".image-element").get(0);
+            for (let i = 1; i < urls.length; i++) {
+              const newImageEl = imageEl.cloneNode(true);
+              newImageEl.style.display = "none";
+              carouselEl.append(newImageEl);
+            }
+          }
+
+          newPost.find(".ph-account-name").each((index, el) => {
+            el.innerHTML = post.account_name;
+          })
+
+          if (typeof post.post_content_url === "string") {
+            newPost.find(".image-element > img").get(0).setAttribute("src", post.post_content_url);
+            newPost.find(".prev-button").get(0).style.display = "none";
+            newPost.find(".next-button").get(0).style.display = "none";
+          } else {
+            const urls = post.post_content_url;
+            for (let i = 0; i < urls.length; i++) {
+              newPost.find(".image-element > img").get(i).setAttribute("src", urls[i]);
+            }
+            newPost.find(".prev-button").get(0).onclick = prevSlide(carouselEl, postIndex);
+            newPost.find(".next-button").get(0).onclick = nextSlide(carouselEl, postIndex, urls.length - 1);
+          }
+
+          post.post_text = post.post_text.replace(/(\B(\#[a-zA-Zàèéòù]+\b)(?!;))/g, "<hashtag>$1</hashtag>");
+
+          newPost.find(".ph-account-likes-it").get(0).innerHTML = post.account_likes_it;
+          newPost.find(".ph-post-text").get(0).innerHTML = post.post_text;
+          newPost.find(".ph-show-comments-text").get(0).innerHTML = post.show_comments_text;
+          newPost.find(".ph-post-date").get(0).innerHTML = post.post_date.toUpperCase();
+
+          templateEl.parentElement.append(newPost.get(0));
+        }
+
+        templateEl.remove();
+      });
+    }
+
+    function prevSlide(carouselEl, postIndex) {
+      return () => {
+        const currIndex = carouselIndexes[postIndex];
+        const nextIndex = Math.max(0, currIndex - 1);
+        carouselIndexes[postIndex] = nextIndex;
+        $(carouselEl).find(".image-element").each((imgIndex, imgEl) => {
+          if (imgIndex === currIndex) {
+            imgEl.style.display = "none";
+          }
+          if (imgIndex === nextIndex) {
+            imgEl.style.display = "block";
+          }
+        });
+      }
+    }
+
+    function nextSlide(carouselEl, postIndex, maxImageIndex) {
+      return () => {
+        const currIndex = carouselIndexes[postIndex];
+        const nextIndex = Math.min(maxImageIndex, currIndex + 1);
+        carouselIndexes[postIndex] = nextIndex;
+        $(carouselEl).find(".image-element").each((imgIndex, imgEl) => {
+          if (imgIndex === nextIndex) {
+            imgEl.style.display = "block";
+          } else {
+            imgEl.style.display = "none";
+          }
+        });
+      }
+    }
+
+  </script>
+</body>
+
+</html>
