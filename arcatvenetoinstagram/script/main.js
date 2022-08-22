@@ -110,4 +110,8 @@ function moveImg(carouselEl, postIndex = -1, maxImageIndex = -1, next = false) {
     transform: `translateX(${next ? -100 : 100}%)`
   });
 
+  setTimeout(() => {
+    $(carouselEl).find(".image-placeholder").attr("src", imgEl.eq(nextIndex).attr("src"));
+  }, ANIM_DURATION);
+
 }
