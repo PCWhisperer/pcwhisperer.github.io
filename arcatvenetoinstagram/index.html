@@ -2,7 +2,9 @@
 <html>
 <!--
    TODO:
+   - slide carousel con transform
    - testo per geolocalizzazione   
+   - gestire anche video
 -->
 
 <head>
@@ -72,8 +74,6 @@
 
     .carousel {
       position: relative;
-      display: flex;
-      flex-direction: row;
     }
 
     .prev-button {
@@ -81,6 +81,8 @@
       top: 50%;
       left: 10px;
       cursor: pointer;
+      transform: rotate(180deg);
+      filter: drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.75));
     }
 
     .next-button {
@@ -88,6 +90,7 @@
       top: 50%;
       right: 10px;
       cursor: pointer;
+      filter: drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.75));
     }
   </style>
 </head>
@@ -109,18 +112,30 @@
           ...
         </div>
       </div>
-      <div style="position: relative; clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);">
+      <div style="position: relative; clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0); overflow-x: hidden;">
         <div class="carousel">
           <!-- immagine -->
-          <img class="image-element" style="display: none; width: 100%; max-width: 470px;" />
+          <img class="image-element" style="display: none;" />
           <!-- video -->
-          <video class="video-element" style="display: none; width: 100%; max-width: 470px;" controls>
+          <video class="video-element" style="display: none;" controls>
             <source type="video/mp4">
             Your browser does not support the video tag.
           </video>
         </div>
-        <img class="prev-button" src="./img/prev.png" />
-        <img class="next-button" src="./img/next.png" />
+        <div class="prev-button">
+          <svg viewBox="0 0 32 32" height="24" width="24" style="fill: rgba(255, 255, 255, 0.75);">
+            <path
+              d="M16,4.39E-05C7.16,0,0,7.16,7.78E-06,16C0,24.83,7.16,32,16,32C20.24,32,24.31,30.31,27.31,27.31C30.31,24.31,32,20.24,32,16C32,11.76,30.31,7.69,27.31,4.69C24.31,1.69,20.24,-0,16,4.98E-06z M13.59,8.49L14.6,9.59 20.58,16 14.6,22.41 13.59,23.5 11.42,21.47 12.43,20.39 16.51,16 12.43,11.61 11.42,10.53 13.59,8.49z">
+            </path>
+          </svg>
+        </div>
+        <div class="next-button">
+          <svg viewBox="0 0 32 32" height="24" width="24" style="fill: rgba(255, 255, 255, 0.75);">
+            <path
+              d="M16,4.39E-05C7.16,0,0,7.16,7.78E-06,16C0,24.83,7.16,32,16,32C20.24,32,24.31,30.31,27.31,27.31C30.31,24.31,32,20.24,32,16C32,11.76,30.31,7.69,27.31,4.69C24.31,1.69,20.24,-0,16,4.98E-06z M13.59,8.49L14.6,9.59 20.58,16 14.6,22.41 13.59,23.5 11.42,21.47 12.43,20.39 16.51,16 12.43,11.61 11.42,10.53 13.59,8.49z">
+            </path>
+          </svg>
+        </div>
       </div>
       <!-- pulsanti interazione -->
       <div class="post-row" style="display: flex; flex-direction: row; align-items: center; column-gap: 18px;">
@@ -191,58 +206,59 @@
     const carouselIndexes = [];
 
     function onLoad() {
-      let templateEl = $("#post-template").first();
-      for (let postIndex = 0; postIndex < posts.length; postIndex++) {
-        const post = posts[postIndex];
-        carouselIndexes.push(0);
+      $(document).ready(() => {
+        let templateEl = $("#post-template").first();
+        for (let postIndex = 0; postIndex < posts.length; postIndex++) {
+          const post = posts[postIndex];
+          carouselIndexes.push(0);
 
-        let newPost = $(templateEl).clone();
-        const carouselEl = newPost.find(".carousel").first();
+          let newPost = $(templateEl).clone();
+          const carouselEl = newPost.find(".carousel").first();
 
-        if (post.is_image) {
-          newPost.find(".image-element").first().css("display", "block");
-        } else {
-          newPost.find(".video-element").first().css("display", "block");
-        }
-
-        if (typeof post.post_content_url !== "string") {
-          const urls = post.post_content_url;
-          const imageEl = newPost.find(".image-element").first();
-          for (let i = 1; i < urls.length; i++) {
-            const newImageEl = imageEl.clone();
-            carouselEl.append(newImageEl);
+          if (post.is_image) {
+            newPost.find(".image-element").first().css("display", "block");
+          } else {
+            newPost.find(".video-element").first().css("display", "block");
           }
-        }
 
-        newPost.find(".ph-account-name").each((index, el) => {
-          el.innerHTML = post.account_name;
-        })
-
-        if (typeof post.post_content_url === "string") {
-          newPost.find(".image-element").get(0).setAttribute("src", post.post_content_url);
-          newPost.find(".prev-button").css("display", "none");
-          newPost.find(".next-button").css("display", "none");
-        } else {
-          const urls = post.post_content_url;
-          for (let i = 0; i < urls.length; i++) {
-            newPost.find(".image-element").get(i).setAttribute("src", urls[i]);
+          if (typeof post.post_content_url === "string") {
+            const imageEl = newPost.find(".image-element").first();
+            imageEl.css("width", "100%");
+            imageEl.attr("src", post.post_content_url);
+            newPost.find(".prev-button").css("display", "none");
+            newPost.find(".next-button").css("display", "none");
+          } else {
+            const urls = post.post_content_url; // urls: string[]
+            const imageEl = newPost.find(".image-element").first();
+            imageEl.css("width", "100%");
+            imageEl.attr("src", urls[0]);
+            for (let i = 1; i < urls.length; i++) {
+              const newImageEl = imageEl.clone();
+              newImageEl.attr("src", urls[i]);
+              newImageEl.css("width", "100%");
+              newImageEl.css("display", "none");
+              carouselEl.append(newImageEl);
+            }
+            newPost.find(".prev-button").on("click", prevSlide(carouselEl, postIndex));
+            newPost.find(".next-button").on("click", nextSlide(carouselEl, postIndex, urls.length - 1));
           }
-          newPost.find(".prev-button").on("click", prevSlide(carouselEl, postIndex));
-          newPost.find(".next-button").on("click", nextSlide(carouselEl, postIndex, urls.length - 1));
+
+          newPost.find(".ph-account-name").each((index, el) => {
+            el.innerHTML = post.account_name;
+          })
+
+          newPost.find(".ph-account-likes-it").html(post.account_likes_it);
+
+          post.post_text = post.post_text.replace(/(\B(\#[a-zA-Zàèéòù]+\b)(?!;))/g, "<hashtag>$1</hashtag>");
+          newPost.find(".ph-post-text").html(post.post_text);
+
+          newPost.find(".ph-show-comments-text").html(post.show_comments_text);
+          newPost.find(".ph-post-date").html(post.post_date.toUpperCase());
+
+          templateEl.parent().append(newPost);
         }
-
-        newPost.find(".ph-account-likes-it").html(post.account_likes_it);
-
-        post.post_text = post.post_text.replace(/(\B(\#[a-zA-Zàèéòù]+\b)(?!;))/g, "<hashtag>$1</hashtag>");
-        newPost.find(".ph-post-text").html(post.post_text);
-
-        newPost.find(".ph-show-comments-text").html(post.show_comments_text);
-        newPost.find(".ph-post-date").html(post.post_date.toUpperCase());
-
-        templateEl.parent().append(newPost);
-      }
-
-      templateEl.remove();
+        templateEl.remove();
+      });
     }
 
     const ANIM_DURATION = 200;
@@ -251,8 +267,18 @@
       return () => {
         const currIndex = carouselIndexes[postIndex];
         const nextIndex = Math.max(0, currIndex - 1);
+
+        if (nextIndex === currIndex) return;
+
         carouselIndexes[postIndex] = nextIndex;
-        $(carouselEl).animate({ marginLeft: `${-100 * nextIndex}%` }, ANIM_DURATION);
+        const imgEl = $(carouselEl).find(".image-element");
+        imgEl.eq(currIndex).css("display", "none");
+        imgEl.eq(nextIndex).css("display", "block");
+        // $(carouselEl).animate({ marginLeft: `${-100 * nextIndex}%` }, ANIM_DURATION, () => {
+        //   imgEl.each((index, el) => {
+        //     if (index !== nextIndex) $(el).css("display", "none");
+        //   });
+        // });
       }
     }
 
@@ -260,8 +286,18 @@
       return () => {
         const currIndex = carouselIndexes[postIndex];
         const nextIndex = Math.min(maxImageIndex, currIndex + 1);
+
+        if (nextIndex === currIndex) return;
+
         carouselIndexes[postIndex] = nextIndex;
-        $(carouselEl).animate({ marginLeft: `${-100 * nextIndex}%` }, ANIM_DURATION);
+        const imgEl = $(carouselEl).find(".image-element");
+        imgEl.eq(currIndex).css("display", "none");
+        imgEl.eq(nextIndex).css("display", "block");
+        // $(carouselEl).animate({ marginLeft: `${-100 * nextIndex}%` }, ANIM_DURATION, () => {
+        //   imgEl.each((index, el) => {
+        //     if (index !== nextIndex) $(el).css("display", "none");
+        //   });
+        // });
       }
     }
 
