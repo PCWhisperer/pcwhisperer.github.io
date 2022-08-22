@@ -10,7 +10,6 @@
 <head>
   <meta title="Instagram - ARCAT Veneto">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <script src="./posts.js"></script>
   <script src="./script/jquery-3.6.0.min.js"></script>
   <style>
     body {
@@ -74,6 +73,15 @@
 
     .carousel {
       position: relative;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .post-image,
+    .post-video {
+      display: none;
+      position: absolute;
+      width: 100%;
     }
 
     .prev-button {
@@ -114,10 +122,12 @@
       </div>
       <div style="position: relative; clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0); overflow-x: hidden;">
         <div class="carousel">
+          <img class="image-placeholder" style="opacity: 0; width: 100%;" />
+
           <!-- immagine -->
-          <img class="image-element" style="display: none;" />
+          <img class="post-image" />
           <!-- video -->
-          <video class="video-element" style="display: none;" controls>
+          <video class="post-video" controls>
             <source type="video/mp4">
             Your browser does not support the video tag.
           </video>
@@ -202,106 +212,8 @@
       </div>
     </div>
   </div>
-  <script>
-    const carouselIndexes = [];
-
-    function onLoad() {
-      $(document).ready(() => {
-        let templateEl = $("#post-template").first();
-        for (let postIndex = 0; postIndex < posts.length; postIndex++) {
-          const post = posts[postIndex];
-          carouselIndexes.push(0);
-
-          let newPost = $(templateEl).clone();
-          const carouselEl = newPost.find(".carousel").first();
-
-          if (post.is_image) {
-            newPost.find(".image-element").first().css("display", "block");
-          } else {
-            newPost.find(".video-element").first().css("display", "block");
-          }
-
-          if (typeof post.post_content_url === "string") {
-            const imageEl = newPost.find(".image-element").first();
-            imageEl.css("width", "100%");
-            imageEl.attr("src", post.post_content_url);
-            newPost.find(".prev-button").css("display", "none");
-            newPost.find(".next-button").css("display", "none");
-          } else {
-            const urls = post.post_content_url; // urls: string[]
-            const imageEl = newPost.find(".image-element").first();
-            imageEl.css("width", "100%");
-            imageEl.attr("src", urls[0]);
-            for (let i = 1; i < urls.length; i++) {
-              const newImageEl = imageEl.clone();
-              newImageEl.attr("src", urls[i]);
-              newImageEl.css("width", "100%");
-              newImageEl.css("display", "none");
-              carouselEl.append(newImageEl);
-            }
-            newPost.find(".prev-button").on("click", prevSlide(carouselEl, postIndex));
-            newPost.find(".next-button").on("click", nextSlide(carouselEl, postIndex, urls.length - 1));
-          }
-
-          newPost.find(".ph-account-name").each((index, el) => {
-            el.innerHTML = post.account_name;
-          })
-
-          newPost.find(".ph-account-likes-it").html(post.account_likes_it);
-
-          post.post_text = post.post_text.replace(/(\B(\#[a-zA-Zàèéòù]+\b)(?!;))/g, "<hashtag>$1</hashtag>");
-          newPost.find(".ph-post-text").html(post.post_text);
-
-          newPost.find(".ph-show-comments-text").html(post.show_comments_text);
-          newPost.find(".ph-post-date").html(post.post_date.toUpperCase());
-
-          templateEl.parent().append(newPost);
-        }
-        templateEl.remove();
-      });
-    }
-
-    const ANIM_DURATION = 200;
-
-    function prevSlide(carouselEl, postIndex) {
-      return () => {
-        const currIndex = carouselIndexes[postIndex];
-        const nextIndex = Math.max(0, currIndex - 1);
-
-        if (nextIndex === currIndex) return;
-
-        carouselIndexes[postIndex] = nextIndex;
-        const imgEl = $(carouselEl).find(".image-element");
-        imgEl.eq(currIndex).css("display", "none");
-        imgEl.eq(nextIndex).css("display", "block");
-        // $(carouselEl).animate({ marginLeft: `${-100 * nextIndex}%` }, ANIM_DURATION, () => {
-        //   imgEl.each((index, el) => {
-        //     if (index !== nextIndex) $(el).css("display", "none");
-        //   });
-        // });
-      }
-    }
-
-    function nextSlide(carouselEl, postIndex, maxImageIndex) {
-      return () => {
-        const currIndex = carouselIndexes[postIndex];
-        const nextIndex = Math.min(maxImageIndex, currIndex + 1);
-
-        if (nextIndex === currIndex) return;
-
-        carouselIndexes[postIndex] = nextIndex;
-        const imgEl = $(carouselEl).find(".image-element");
-        imgEl.eq(currIndex).css("display", "none");
-        imgEl.eq(nextIndex).css("display", "block");
-        // $(carouselEl).animate({ marginLeft: `${-100 * nextIndex}%` }, ANIM_DURATION, () => {
-        //   imgEl.each((index, el) => {
-        //     if (index !== nextIndex) $(el).css("display", "none");
-        //   });
-        // });
-      }
-    }
-
-  </script>
+  <script src="./script/posts.js"></script>
+  <script src="./script/main.js"></script>
 </body>
 
 </html>
