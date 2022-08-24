@@ -1,4 +1,4 @@
-var posts = [
+posts = [
   {
     "account_name": "ARCAT_Veneto",
     "is_image": true,

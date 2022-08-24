@@ -1,28 +1,62 @@
-const carouselIndexes = [-1];
+let carouselIndexes = [-1];
 const ANIM_DURATION = 200;
-const transitionValue = `transform ${ANIM_DURATION}ms linear 0s`;
+const transitionValue = `transform ${ANIM_DURATION}ms ease-in-out 0s`;
+
+function dragOverHandler(ev) {
+  ev.preventDefault();
+}
+
+function dropHandler(ev) {
+  ev.preventDefault();
+
+  let fileToRead;
+  if (ev.dataTransfer.items) {
+    [...ev.dataTransfer.items].forEach((item, i) => {
+      if (item.kind === 'file') {
+        fileToRead = item.getAsFile();
+      }
+    });
+  } else {
+    [...ev.dataTransfer.files].forEach((file, i) => {
+      fileToRead = file;
+    });
+  }
+  const reader = new FileReader();
+  reader.onload = function (event) {
+    eval(event.target.result);
+    onLoad();
+  };
+  reader.readAsText(fileToRead);
+}
 
 function onLoad() {
+  carouselIndexes = [-1];
   carouselIndexes.pop();
   jQuery(() => {
+    $(".post-container:not(#post-template)").remove();
     let templateEl = $("#post-template").first();
     for (let postIndex = 0; postIndex < posts.length; postIndex++) {
       const post = posts[postIndex];
       carouselIndexes.push(0);
 
       let newPost = $(templateEl).clone();
+      newPost.css("display", "");
+      newPost.removeAttr("id");
       const carouselEl = newPost.find(".carousel").first();
 
       if (post.is_image) {
-        newPost.find(".post-image").first().css("display", "block");
+        newPost.find(".post-image").css("display", "block");
       } else {
-        newPost.find(".post-video").first().css("display", "block");
+        newPost.find(".post-video").css("display", "block");
       }
 
       if (typeof post.post_content_url === "string") {
-        const imageEl = newPost.find(".post-image").first();
-        imageEl.attr("src", post.post_content_url);
-        imageEl.css("position", "relative");
+        let elementToSet = newPost.find(".post-image");
+        if (!post.is_image) {
+          elementToSet = newPost.find(".post-video");
+        }
+        elementToSet.attr("src", post.post_content_url);
+        elementToSet.css("position", "relative");
         newPost.find(".prev-button").css("display", "none");
         newPost.find(".next-button").css("display", "none");
       } else {
@@ -61,7 +95,7 @@ function onLoad() {
 
       templateEl.parent().append(newPost);
     }
-    templateEl.remove();
+    templateEl.css("display", "none");
   });
 }
 

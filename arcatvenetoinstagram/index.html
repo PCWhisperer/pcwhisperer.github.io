@@ -3,7 +3,6 @@
 <!--
    TODO:
    - testo per geolocalizzazione
-   - gestire anche video
 -->
 
 <head>
@@ -103,7 +102,8 @@
 </head>
 
 <body onload="onLoad()">
-  <div style="display: flex; flex-direction: column; align-items: center;">
+  <div ondrop="dropHandler(event);" ondragover="dragOverHandler(event);"
+    style="display: flex; flex-direction: column; align-items: center;">
     <!-- Contenitore post -->
     <div id="post-template" class="post-container">
       <!-- nome account -->
