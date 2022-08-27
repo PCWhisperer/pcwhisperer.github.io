@@ -44,39 +44,38 @@ function onLoad() {
       newPost.removeAttr("id");
       const carouselEl = newPost.find(".carousel").first();
 
-      if (post.is_image) {
-        newPost.find(".post-image").css("display", "block");
-      } else {
-        newPost.find(".post-video").css("display", "block");
-      }
+      const imageEl = newPost.find(".post-image");
+      const videoEl = newPost.find(".post-video");
 
       if (typeof post.post_content_url === "string") {
-        let elementToSet = newPost.find(".post-image");
-        if (!post.is_image) {
-          elementToSet = newPost.find(".post-video");
+        const isVideo = post.post_content_url.endsWith(".mp4");
+        let elementToSet = imageEl;
+        if (isVideo) {
+          elementToSet = videoEl;
         }
         elementToSet.attr("src", post.post_content_url);
-        elementToSet.css("position", "relative");
+        elementToSet.css({ display: "block", position: "relative" });
         newPost.find(".prev-button").css("display", "none");
         newPost.find(".next-button").css("display", "none");
       } else {
         const urls = post.post_content_url; // urls: string[]
-        const imageEl = newPost.find(".post-image").first();
-        imageEl.css({
-          transition: transitionValue,
-          transform: `translateX(0%)`,
-        });
-        imageEl.attr("src", urls[0]);
         newPost.find(".image-placeholder").attr("src", urls[0]);
-        for (let i = 1; i < urls.length; i++) {
-          const newImageEl = imageEl.clone();
-          newImageEl.attr("src", urls[i]);
-          newImageEl.css({
+        for (let i = 0; i < urls.length; i++) {
+          const isVideo = urls[i].endsWith(".mp4");
+          const newEl = imageEl.clone();
+          if (isVideo) {
+            newEl = videoEl.clone();
+          }
+          newEl.attr("src", urls[i]);
+          newEl.css({
+            display: "block",
             transition: transitionValue,
-            transform: `translateX(100%)`,
+            transform: `translateX(${i === 0 ? 0 : 100}%)`,
           });
-          carouselEl.append(newImageEl);
+          carouselEl.append(newEl);
         }
+        imageEl.remove();
+        videoEl.remove();
         newPost.find(".prev-button").on("click", prevSlide(carouselEl, postIndex, urls.length - 1));
         newPost.find(".next-button").on("click", nextSlide(carouselEl, postIndex, urls.length - 1));
       }

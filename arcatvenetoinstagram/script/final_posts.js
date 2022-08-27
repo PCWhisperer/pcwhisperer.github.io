@@ -1,7 +1,6 @@
 posts = [
   {
     "account_name": "ARCAT_Veneto",
-    "is_image": true,
     "post_content_url": "./img/iamnotanonymous.jpeg",
     "account_likes_it": "ACAT_Belluno, AICAT",
     "post_text": `Esportiamo l'inclusione FUORI dal Club
@@ -15,7 +14,6 @@ posts = [
   },
   {
     "account_name": "ARCAT_Veneto",
-    "is_image": true,
     "post_content_url": "",
     "account_likes_it": "ACAT_Belluno, AICAT",
     "post_text": `La cultura scientifica è il nostro futuro
@@ -28,7 +26,6 @@ posts = [
   },
   {
     "account_name": "ARCAT_Veneto",
-    "is_image": true,
     "post_content_url": "",
     "account_likes_it": "ACAT_Belluno, AICAT",
     "post_text": `Generazioni diverse parlano lingue diverse
@@ -40,7 +37,6 @@ posts = [
   },
   {
     "account_name": "ARCAT_Veneto",
-    "is_image": true,
     "post_content_url": "",
     "account_likes_it": "ACAT_Belluno, AICAT",
     "post_text": `Cosa si fa realmente durante la serata di Club?
@@ -53,7 +49,6 @@ posts = [
   },
   {
     "account_name": "ARCAT_Veneto",
-    "is_image": true,
     "post_content_url": "",
     "account_likes_it": "ACAT_Belluno, AICAT",
     "post_text": `Il cambiamento si realizza conoscendo nuove persone
@@ -65,7 +60,6 @@ posts = [
   },
   {
     "account_name": "ARCAT_Veneto",
-    "is_image": true,
     "post_content_url": "",
     "account_likes_it": "ACAT_Belluno, AICAT",
     "post_text": `"Alcolista" è davvero una parola tabù?
