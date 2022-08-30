@@ -1,0 +1,42 @@
+posts = [
+  {
+    "account_name": "ARCAT_Veneto",
+    "post_content_url": ["./img/gav_congresso/prova_gen.jpg", "./img/gav_congresso/square_gen.jpeg"],
+    "account_likes_it": "ACAT_Belluno, AICAT",
+    "post_text": `#nuovegenerazioni #generazioni #comunicazione #club`,
+    "show_comments_text": "Mostra tutti e 5 i commenti",
+    "post_date": "1 giorno fa",
+  },
+  {
+    "account_name": "ARCAT_Veneto",
+    "post_content_url": ["./img/gav_congresso/prova_inclusione.jpg", "./img/gav_congresso/square_inclusione.jpeg"],
+    "account_likes_it": "ACAT_Belluno, AICAT",
+    "post_text": `#inclusione #culture #accoglienza #club`,
+    "show_comments_text": "Mostra tutti e 5 i commenti",
+    "post_date": "1 giorno fa",
+  },
+  {
+    "account_name": "ARCAT_Veneto",
+    "post_content_url": ["./img/gav_congresso/prova_arte.jpg", "./img/gav_congresso/square_noia.jpeg"],
+    "account_likes_it": "ACAT_Belluno, AICAT",
+    "post_text": `#noia #risorsa #club`,
+    "show_comments_text": "Mostra tutti e 5 i commenti",
+    "post_date": "1 giorno fa",
+  },
+  {
+    "account_name": "ARCAT_Veneto",
+    "post_content_url": ["./img/gav_congresso/prova_scienza.jpg", "./img/gav_congresso/square_scienza.jpeg"],
+    "account_likes_it": "ACAT_Belluno, AICAT",
+    "post_text": `#scienza #bellezza #club`,
+    "show_comments_text": "Mostra tutti e 5 i commenti",
+    "post_date": "1 giorno fa",
+  },
+  {
+    "account_name": "ARCAT_Veneto",
+    "post_content_url": ["./img/gav_congresso/prova_tabu.jpg", "./img/gav_congresso/square_tabu.jpeg"],
+    "account_likes_it": "ACAT_Belluno, AICAT",
+    "post_text": `#tabu #parole #shock #club`,
+    "show_comments_text": "Mostra tutti e 5 i commenti",
+    "post_date": "1 giorno fa",
+  },
+];

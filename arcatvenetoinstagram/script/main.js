@@ -2,6 +2,15 @@ let carouselIndexes = [-1];
 const ANIM_DURATION = 200;
 const transitionValue = `transform ${ANIM_DURATION}ms ease-in-out 0s`;
 
+let touchstartX = 0;
+let touchstartY = 0;
+let touchendX = 0;
+let touchendY = 0;
+
+function dragStartNone(ev) {
+  ev.preventDefault();
+}
+
 function dragOverHandler(ev) {
   ev.preventDefault();
 }
@@ -66,6 +75,18 @@ function onLoad() {
           if (isVideo) {
             newEl = videoEl.clone();
           }
+          newEl.get(0).addEventListener("dragstart", function (ev) {
+            dragStartNone(ev);
+          });
+          newEl.get(0).addEventListener("touchstart", function (ev) {
+            touchstartX = ev.touches[0].screenX;
+            touchstartY = ev.touches[0].screenY;
+          });
+          newEl.get(0).addEventListener("touchend", function (ev) {
+            touchendX = ev.changedTouches[0].screenX;
+            touchendY = ev.changedTouches[0].screenY;
+            handleGesture(carouselEl, postIndex, urls.length - 1)(ev);
+          });
           newEl.attr("src", urls[i]);
           newEl.css({
             display: "block",
@@ -76,6 +97,7 @@ function onLoad() {
         }
         imageEl.remove();
         videoEl.remove();
+        newPost.find(".prev-button").css("display", "none");
         newPost.find(".prev-button").on("click", prevSlide(carouselEl, postIndex, urls.length - 1));
         newPost.find(".next-button").on("click", nextSlide(carouselEl, postIndex, urls.length - 1));
       }
@@ -114,6 +136,8 @@ function moveImg(carouselEl, postIndex = -1, maxImageIndex = -1, next = false) {
   const currIndex = carouselIndexes[postIndex];
   const nextIndex = next ? Math.min(maxImageIndex, currIndex + 1) : Math.max(0, currIndex - 1);
 
+  $(carouselEl).siblings(".prev-button").css("display", nextIndex === 0 ? "none" : "");
+  $(carouselEl).siblings(".next-button").css("display", nextIndex === maxImageIndex ? "none" : "");
   if (nextIndex === currIndex) return;
 
   carouselIndexes[postIndex] = nextIndex;
@@ -147,4 +171,35 @@ function moveImg(carouselEl, postIndex = -1, maxImageIndex = -1, next = false) {
     $(carouselEl).find(".image-placeholder").attr("src", imgEl.eq(nextIndex).attr("src"));
   }, ANIM_DURATION);
 
+}
+
+const pageWidth = window.innerWidth || document.body.clientWidth;
+const treshold = Math.max(1, Math.floor(0.01 * (pageWidth)));
+const limit = Math.tan(45 * 1.5 / 180 * Math.PI);
+
+function handleGesture(carouselEl, postIndex, maxImageIndex) {
+  return (e) => {
+    let x = touchendX - touchstartX;
+    let y = touchendY - touchstartY;
+    let xy = Math.abs(x / y);
+    let yx = Math.abs(y / x);
+    if (Math.abs(x) > treshold || Math.abs(y) > treshold) {
+      if (yx <= limit) {
+        if (x < 0) {
+          nextSlide(carouselEl, postIndex, maxImageIndex)();
+        } else {
+          prevSlide(carouselEl, postIndex, maxImageIndex)();
+        }
+      }
+      if (xy <= limit) {
+        if (y < 0) {
+          console.log("top");
+        } else {
+          console.log("bottom");
+        }
+      }
+    } else {
+      console.log("tap");
+    }
+  };
 }
